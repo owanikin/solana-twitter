@@ -29,3 +29,13 @@ const PUBLIC_KEY_LENGTH: usize = 32;
 const STRING_LENGTH_PREFIX: usize = 4;
 const MAX_TOPIC_LENGTH: usize = 50 * 4;
 const MAX_CONTENT_LENGTH: usize = 280 * 4;
+
+
+// Add a constant on the Tweet account that provides its total size.
+impl Tweet {
+    const LEN: usize = DISCRIMINATOR_LENGTH
+        + PUBLIC_KEY_LENGTH
+        + TIMESTAMP_LENGTH
+        + STRING_LENGTH_PREFIX + MAX_TOPIC_LENGTH
+        + STRING_LENGTH_PREFIX + MAX_CONTENT_LENGTH;
+}
