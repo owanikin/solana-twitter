@@ -10,6 +10,19 @@ pub mod solana_twitter {
     // pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
     //     Ok(())
     // }
+
+    pub fn send_tweet(ctx: Context<SendTweet>, topic: String, content: String) -> ProgramResult {
+        let tweet: &mut Account<Tweet> = &mut ctx.accounts.tweet;
+        let author: &Signer = &ctx.accounts.author;
+        let clock: Clock = Clock::get().unwrap();
+
+        tweet.author = *author.key;
+        tweet.timestamp = clock.unix_timestamp;
+        tweet.topic = topic;
+        tweet.content = content;
+        
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
