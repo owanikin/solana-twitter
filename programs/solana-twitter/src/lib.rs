@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::system_program;
 
 declare_id!("EMdQpPZ7s3c49wBeqvxpCJBuUwbfSQ47HJefERMmj74E");
 
@@ -7,29 +6,17 @@ declare_id!("EMdQpPZ7s3c49wBeqvxpCJBuUwbfSQ47HJefERMmj74E");
 pub mod solana_twitter {
     use super::*;
 
-    // pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-    //     Ok(())
-    // }
-
-    #[error_code]
-    pub enum ErrorCode {
-        #[msg("The provided topic should be 50 characters long maximum.")]
-        TopicTooLong,
-        #[msg("The provided content should be 280 characters long maximum.")]
-        ContentTooLong,
-    }
-
-    pub fn send_tweet(ctx: Context<SendTweet>, topic: String, content: String) -> ProgramResult {
+    pub fn send_tweet(ctx: Context<SendTweet>, topic: String, content: String) -> Result<()> {
         let tweet: &mut Account<Tweet> = &mut ctx.accounts.tweet;
         let author: &Signer = &ctx.accounts.author;
         let clock: Clock = Clock::get().unwrap();
 
         if topic.chars().count() > 50 {
-            return Err(ErrorCode::TopicTooLong.into())
+            return Err(error!(ErrorCode::TopicTooLong))
         }
 
         if content.chars().count() > 280 {
-            return Err(ErrorCode::ContentTooLong.into())
+            return Err(error!(ErrorCode::ContentTooLong))
         }
 
         tweet.author = *author.key;
@@ -47,8 +34,9 @@ pub struct SendTweet<'info> {
     pub tweet: Account<'info, Tweet>,
     #[account(mut)]
     pub author: Signer<'info>,
-    #[account(address = system_program::ID)]
-    pub system_program: AccountInfo<'info>,
+    // #[account(address = system_program::ID)]
+    // pub system_program: AccountInfo<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 #[account]
@@ -76,3 +64,12 @@ impl Tweet {
         + STRING_LENGTH_PREFIX + MAX_TOPIC_LENGTH
         + STRING_LENGTH_PREFIX + MAX_CONTENT_LENGTH;
 }
+
+#[error_code]
+    pub enum ErrorCode {
+        #[msg("The provided topic should be 50 characters long maximum.")]
+        TopicTooLong,
+        #[msg("The provided content should be 280 characters long maximum.")]
+        ContentTooLong,
+    }
+
