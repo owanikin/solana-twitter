@@ -125,4 +125,21 @@ describe('solana-twitter', () => {
     const tweetAccounts = await program.account.tweet.all();
     assert.equal(tweetAccounts.length, 3);
   })
+
+  it("can filter tweets by author", async () => {
+    const authorPublicKey = provider.wallet.publicKey
+    const tweetAccounts = await program.account.tweet.all([
+      {
+        memcmp: {
+          offset: 8, // Discriminator
+          bytes: authorPublicKey.toBase58(),
+        }
+      }
+    ]);
+
+    assert.equal(tweetAccounts.length, 2);
+    assert.ok(tweetAccounts.every(tweetAccounts => {
+      return tweetAccounts.account.author.toBase58()
+    }))
+  });
 });
