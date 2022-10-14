@@ -1,15 +1,17 @@
 import * as anchor from '@project-serum/anchor';
 import { Program } from '@project-serum/anchor';
+import { AnchorProvider, web3 } from '@project-serum/anchor';
 import { SolanaTwitter } from '../target/types/solana_twitter';
 import * as assert from "assert";
 import * as bs58 from "bs58";
 
+const { SystemProgram } = web3
 describe('solana-twitter', () => {
     // Configure the client to use the local cluster.
     // anchor.setProvider(anchor.Provider.env());
-    const provider = anchor.AnchorProvider.env()
+    const provider = anchor.AnchorProvider.local()
     anchor.setProvider(provider)
-    const program = anchor.workspace.SolanaTwitter as Program<SolanaTwitter>;
+    const program = anchor.workspace.SolanaTwitter;
 
     it('can send a new tweet', async () => {
         // Call the "SendTweet" instruction.
