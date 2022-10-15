@@ -3,13 +3,20 @@ seeds = false
 [programs.localnet]
 solana_twitter = "EMdQpPZ7s3c49wBeqvxpCJBuUwbfSQ47HJefERMmj74E"
 
+[programs.devnet]
+solana_twitter = "EMdQpPZ7s3c49wBeqvxpCJBuUwbfSQ47HJefERMmj74E"
+
+[programs.mainnet]
+solana_twitter = "EMdQpPZ7s3c49wBeqvxpCJBuUwbfSQ47HJefERMmj74E"
+
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/Users/test./.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+copy-idl = "mkdir -p app/src/idl && cp target/idl/solana_twitter.json app/src/idl/solana_twitter.json"
 my-custom-script = "echo 'Hello World!'"
